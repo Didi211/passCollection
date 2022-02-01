@@ -94,7 +94,7 @@ def main():
         option = 0
         options = [1,2,3,4]
         options = { 
-            1: 'Add new password',
+            1: 'Add new password or update',
             2: 'Get password for a key',
             3: 'Delete key and password',
             4: 'Get all keys'
