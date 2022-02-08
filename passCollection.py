@@ -27,7 +27,7 @@ def addOrUpdatePassword(passDict):
         answer = 0
         while answer not in [1,2]:
             try: 
-                answer = int(input("Do you want to update it? 1)Yes 2)No"))
+                answer = int(input("Do you want to update it? 1)Yes 2)No\n"))
             except: 
                 print("Invalid input")
             else: 
