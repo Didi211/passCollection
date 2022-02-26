@@ -1,4 +1,3 @@
-from io import TextIOWrapper
 import json
 from typing import List
 
@@ -18,9 +17,11 @@ def saveToFile(passDict,filename):
         fajl.close()
     return True
 
-def addOrUpdatePassword(passDict): 
+def addOrUpdateAccInfo(passDict): 
     key = input("Enter key: ")
-    value = input("Enter value: ")
+    accUsername = input("Enter account username: ")
+    accPassword = input("Enter account password: ")
+
 
     if key in passDict.keys():
         print(f"Key '{key}' already exists.")
@@ -34,24 +35,28 @@ def addOrUpdatePassword(passDict):
                 if answer not in [1,2]:
                     print("Invalid option.")
                 elif answer == 1: 
-                    passDict[key] = value
-                    return print(f"Password for key '{key}' has beend updated")
+                    passDict[key]['username'] = accUsername
+                    passDict[key]['password'] = accPassword
 
-    passDict[key] = value
-    return print(f"Password for key '{key}' has been added.")
+                    return print(f"Account info for key '{key}' has been updated")
+    passDict[key] = dict()
+    passDict[key]['username'] = accUsername
+    passDict[key]['password'] = accPassword
+
+    return print(f"Account info for key '{key}' has been added.")
     
-def getPassword(passDict):
+def getAccInfo(passDict):
     key = input("Enter key: ")
     if key not in passDict.keys():
         return print(f"Key '{key}' does not exist.")
-    return print(f"Password for key '{key} is '{passDict[key]}'")
+    return print(f"Account info for key '{key} is:\nUsername: '{passDict[key]['username']}'\nPassword: '{passDict[key]['password']}'")
 
-def deletePassword(passDict):
+def deleteAccInfo(passDict):
     key = input("Enter key: ")
     if key not in passDict.keys():
         return print(f"Key '{key}' does not exist.")
     passDict.pop(key)
-    print(f"Key '{key}' and its password has been removed.")
+    print(f"Key '{key}' and its information have been removed.")
     return
 
 def getAllKeys(passDict):
@@ -59,9 +64,9 @@ def getAllKeys(passDict):
     for key in passDict: 
         print(f'   - {key}')
 func = {
-    1: addOrUpdatePassword,
-    2: getPassword,
-    3: deletePassword,
+    1: addOrUpdateAccInfo,
+    2: getAccInfo,
+    3: deleteAccInfo,
     4: getAllKeys
 }
 
@@ -94,9 +99,9 @@ def main():
         option = 0
         options = [1,2,3,4]
         options = { 
-            1: 'Add new password or update',
-            2: 'Get password for a key',
-            3: 'Delete key and password',
+            1: 'Add new account info or update existing',
+            2: 'Get account info for a key',
+            3: 'Delete key and account info',
             4: 'Get all keys'
         }
         while option not in options.keys():
@@ -118,7 +123,10 @@ def main():
                 continue
         if inp == "": 
             continue
-        func[option](passDict)
+        try: 
+            func[option](passDict)
+        except Exception as err:
+            print(err)
         
         inp = input("Press any key to continue or  type 'exit' to exit\n")
     try: 
