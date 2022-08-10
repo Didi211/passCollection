@@ -97,7 +97,7 @@ def main():
     while inp != "exit":
         print("Choose an option.")
         option = 0
-        options = [1,2,3,4]
+        optionsStr = [1,2,3,4]
         options = { 
             1: 'Add new account info or update existing',
             2: 'Get account info for a key',
@@ -113,7 +113,7 @@ def main():
                 option = int(input("Choose one number: "))
                 inp = str(option)
             except:
-                print(f"Please input numbers {options.keys()} only")
+                print(f"Please input numbers {optionsStr} only.")
                 inp = ""
                 break
             
