@@ -6,7 +6,7 @@ from typing import List
 def convertToDict(data: List[str]) -> dict:
     return dict() if len(data) == 0 else json.loads(data)
 
-def saveToFile(passDict,filename):
+def saveToFile(passDict):
     try: 
         fajl = open(f'{filename}.txt','w')
         fajl.write(json.dumps(passDict))
@@ -40,12 +40,12 @@ def addOrUpdateAccInfo(passDict):
                 if answer == 1: 
                     passDict[key]['username'] = accUsername
                     passDict[key]['password'] = accPassword
-                    saveToFile(passDict,filename)
+                    saveToFile(passDict)
                     return print(f"Account info for key '{key}' has been updated.")
     passDict[key] = dict()
     passDict[key]['username'] = accUsername
     passDict[key]['password'] = accPassword
-    saveToFile(passDict,filename)
+    saveToFile(passDict)
     return print(f"Account info for key '{key}' has been added.")
     
 def getAccInfo(passDict):
@@ -59,6 +59,7 @@ def deleteAccInfo(passDict):
     if key not in passDict.keys():
         return print(f"Key '{key}' does not exist.")
     passDict.pop(key)
+    saveToFile(passDict)
     print(f"Key '{key}' and its information have been removed.")
     return
 
@@ -79,8 +80,9 @@ menu_functions = {
     4: getAllKeys
 }
 
-filename = ""
 def main():
+    global filename
+    filename = ""
     fileObj = None
     try:
         filename = input("Name of txt file: ").strip()
@@ -140,10 +142,10 @@ def main():
             print(err)
         
         inp = input("\nPress any key to continue or  type 'exit' to close the app.\n")
-    try: 
-        saveToFile(passDict,filename)
-    except Exception as err: 
-        print(err)
+    # try: 
+    #     saveToFile(passDict,filename)
+    # except Exception as err: 
+    #     print(err)
 
 if __name__ == '__main__':
     main()
