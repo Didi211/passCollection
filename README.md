@@ -6,3 +6,5 @@ Simple Python console app made for saving passwords with CRUD operations.
 Persistance included in text files.
 
 Start as normal application (double click)
+
+Installation link https://datatofish.com/executable-pyinstaller/
