@@ -1,6 +1,8 @@
 import json
 from typing import List
 
+#region functions
+
 def convertToDict(data: List[str]) -> dict:
     return dict() if len(data) == 0 else json.loads(data)
 
@@ -18,35 +20,36 @@ def saveToFile(passDict,filename):
     return True
 
 def addOrUpdateAccInfo(passDict): 
-    key = input("Enter key: ")
+    key = input("\nEnter key: ")
     accUsername = input("Enter account username: ")
     accPassword = input("Enter account password: ")
 
 
     if key in passDict.keys():
-        print(f"Key '{key}' already exists.")
+        print(f"\nKey '{key}' already exists.")
         answer = 0
         while answer not in [1,2]:
             try: 
-                answer = int(input("Do you want to update it? 1)Yes 2)No\n"))
+                answer = int(input("Do you want to update it? 1) Yes 2) No\n"))
             except: 
-                print("Invalid input")
+                print("Invalid input.")
             else: 
                 if answer not in [1,2]:
-                    print("Invalid option.")
-                elif answer == 1: 
+                    return print("Invalid option.")
+                if answer == 2: return print(f"No changes applied.")
+                if answer == 1: 
                     passDict[key]['username'] = accUsername
                     passDict[key]['password'] = accPassword
-
-                    return print(f"Account info for key '{key}' has been updated")
+                    saveToFile(passDict,filename)
+                    return print(f"Account info for key '{key}' has been updated.")
     passDict[key] = dict()
     passDict[key]['username'] = accUsername
     passDict[key]['password'] = accPassword
-
+    saveToFile(passDict,filename)
     return print(f"Account info for key '{key}' has been added.")
     
 def getAccInfo(passDict):
-    key = input("Enter key: ")
+    key = input("\nEnter key: ")
     if key not in passDict.keys():
         return print(f"Key '{key}' does not exist.")
     return print(f"Account info for key '{key} is:\nUsername: '{passDict[key]['username']}'\nPassword: '{passDict[key]['password']}'")
@@ -59,27 +62,36 @@ def deleteAccInfo(passDict):
     print(f"Key '{key}' and its information have been removed.")
     return
 
-def getAllKeys(passDict):
-    print("Available keys:")
+def getAllKeys(passDict: dict):
+
+    if len(passDict) == 0:
+        return print("Collection is empty.")
+    print("\nAvailable keys:")
     for key in passDict: 
         print(f'   - {key}')
-func = {
+
+#endregion
+
+menu_functions = {
     1: addOrUpdateAccInfo,
     2: getAccInfo,
     3: deleteAccInfo,
     4: getAllKeys
 }
 
+filename = ""
 def main():
-    filename = ""
     fileObj = None
     try:
         filename = input("Name of txt file: ").strip()
         fileObj = open(f"{filename}.txt",'r')
+        print("\nCollection loaded.")
+
     except FileNotFoundError as err : 
         fileCreate = open(f"{filename}.txt",'w')
         fileCreate.close()
         fileObj = open(f"{filename}.txt",'r')
+        print("\nCollection created.")
 
     passDict = dict()
     try: 
@@ -89,13 +101,12 @@ def main():
         return
     finally: 
         fileObj.close()
-    print("Data loaded.")
     print("App started.")
     if len(passDict) > 0: 
         getAllKeys(passDict)
     inp = ""
     while inp != "exit":
-        print("Choose an option.")
+        print("\nChoose an option.")
         option = 0
         optionsStr = [1,2,3,4]
         options = { 
@@ -108,27 +119,27 @@ def main():
             try:
                 index = 1
                 for key in options:
-                    print(f'{index}){options[key]}')
+                    print(f'   {index}) {options[key]}')
                     index += 1
-                option = int(input("Choose one number: "))
+                option = int(input("\nChoose one number: "))
                 inp = str(option)
             except:
-                print(f"Please input numbers {optionsStr} only.")
+                print(f'Please input numbers', optionsStr, 'only.')
                 inp = ""
                 break
             
             if option not in options.keys():
-                print("Invalid option")
+                print("Invalid option.")
                 inp = ""
                 continue
         if inp == "": 
             continue
         try: 
-            func[option](passDict)
+            menu_functions[option](passDict)
         except Exception as err:
             print(err)
         
-        inp = input("Press any key to continue or  type 'exit' to exit\n")
+        inp = input("\nPress any key to continue or  type 'exit' to close the app.\n")
     try: 
         saveToFile(passDict,filename)
     except Exception as err: 
